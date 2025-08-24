@@ -295,6 +295,12 @@
             <div class="recipes-db">
                 <h2 class="section-title">Mis Recetas Guardadas</h2>
                 
+                <!-- Botón para eliminar todas las recetas -->
+                <div class="danger-zone">
+                    <button id="delete-all-recipes" class="btn btn-danger">Eliminar Todas las Recetas</button>
+                    <p class="danger-warning">⚠️ Esta acción no se puede deshacer</p>
+                </div>
+                
                 <div id="recipes-list">
                     <div class="no-recipes">
                         <p>No hay recetas guardadas todavía.</p>
@@ -347,6 +353,19 @@
                     <li>Selecciona el alcance "repo" para dar acceso a repositorios</li>
                     <li>Copia el token generado y pégala arriba</li>
                 </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar recetas -->
+    <div id="confirm-modal" class="confirm-modal">
+        <div class="confirm-content">
+            <h3>¿Estás seguro?</h3>
+            <p>Esta acción eliminará todas las recetas permanentemente.</p>
+            <p>No podrás recuperarlas.</p>
+            <div class="confirm-buttons">
+                <button id="confirm-delete" class="confirm-btn confirm-yes">Sí, eliminar todo</button>
+                <button id="cancel-delete" class="confirm-btn confirm-no">Cancelar</button>
             </div>
         </div>
     </div>
