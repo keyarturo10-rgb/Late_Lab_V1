@@ -9,6 +9,188 @@ let githubConfig = {
     file: 'recipes.json'
 };
 
+// Función para inicializar los event listeners de GitHub
+function initGitHubListeners() {
+    const configureGithubBtn = document.getElementById('configure-github');
+    const githubModal = document.getElementById('github-modal');
+    const closeModal = document.querySelector('.close');
+    const saveGithubConfigBtn = document.getElementById('save-github-config');
+    const githubTokenInput = document.getElementById('github-token');
+    const githubUsernameInput = document.getElementById('github-username');
+    const githubRepoInput = document.getElementById('github-repo');
+    const githubFileInput = document.getElementById('github-file');
+    
+    if (configureGithubBtn && githubModal) {
+        configureGithubBtn.addEventListener('click', function() {
+            if (githubTokenInput && githubUsernameInput && githubRepoInput && githubFileInput) {
+                githubTokenInput.value = githubConfig.token || '';
+                githubUsernameInput.value = githubConfig.username;
+                githubRepoInput.value = githubConfig.repo;
+                githubFileInput.value = githubConfig.file;
+                
+                // Mostrar el modal
+                githubModal.style.display = 'block';
+                console.log('Modal de GitHub mostrado');
+            }
+        });
+    }
+    
+    if (closeModal && githubModal) {
+        closeModal.addEventListener('click', function() {
+            githubModal.style.display = 'none';
+        });
+    }
+    
+    if (saveGithubConfigBtn) {
+        saveGithubConfigBtn.addEventListener('click', function() {
+            if (githubTokenInput && githubUsernameInput && githubRepoInput && githubFileInput) {
+                githubConfig.token = githubTokenInput.value;
+                githubConfig.username = githubUsernameInput.value;
+                githubConfig.repo = githubRepoInput.value;
+                githubConfig.file = githubFileInput.value;
+                
+                saveGithubConfig();
+                
+                if (githubModal) {
+                    githubModal.style.display = 'none';
+                }
+                
+                // Recargar las recetas desde GitHub después de configurar
+                loadRecipes();
+            }
+        });
+    }
+    
+    // Cerrar modal al hacer clic fuera de él
+    window.addEventListener('click', function(event) {
+        const githubModal = document.getElementById('github-modal');
+        if (githubModal && event.target === githubModal) {
+            githubModal.style.display = 'none';
+        }
+    });
+}
+
+// Cargar configuración de GitHub desde localStorage
+function loadGithubConfig() {
+    const savedConfig = localStorage.getItem('githubConfig');
+    if (savedConfig) {
+        githubConfig = JSON.parse(savedConfig);
+        updateGithubStatus();
+    }
+}
+
+// Guardar configuración de GitHub en localStorage
+function saveGithubConfig() {
+    localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
+    updateGithubStatus();
+}
+
+// Actualizar la interfaz con el estado de GitHub
+function updateGithubStatus() {
+    const githubStatusText = document.getElementById('github-status-text');
+    const githubStatus = document.getElementById('github-status');
+    
+    if (githubStatusText && githubStatus) {
+        if (githubConfig.token) {
+            githubStatusText.textContent = `Conectado a GitHub: ${githubConfig.username}/${githubConfig.repo}`;
+            githubStatus.classList.add('connected');
+        } else {
+            githubStatusText.textContent = 'No conectado a GitHub';
+            githubStatus.classList.remove('connected');
+        }
+    }
+}
+
+// Guardar recetas en GitHub
+async function saveRecipesToGitHub(recipes) {
+    if (!githubConfig.token) {
+        console.error('Token de GitHub no configurado');
+        return false;
+    }
+    
+    try {
+        const url = `https://api.github.com/repos/${githubConfig.username}/${githubConfig.repo}/contents/${githubConfig.file}`;
+        
+        // Primero, intentamos obtener el archivo existente para obtener su SHA
+        let sha = null;
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${githubConfig.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                sha = data.sha;
+            }
+        } catch (e) {
+            console.log('Archivo no existe o no se puede acceder, se creará uno nuevo');
+        }
+        
+        // Preparar el contenido para GitHub
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(recipes, null, 2))));
+        const message = `Actualización de recetas desde La-té Lab: ${new Date().toLocaleString()}`;
+        
+        const putResponse = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                content: content,
+                sha: sha
+            })
+        });
+        
+        if (putResponse.ok) {
+            console.log('Recetas guardadas en GitHub correctamente');
+            return true;
+        } else {
+            console.error('Error al guardar en GitHub:', await putResponse.text());
+            return false;
+        }
+    } catch (error) {
+        console.error('Error al guardar en GitHub:', error);
+        return false;
+    }
+}
+
+// Cargar recetas desde GitHub
+async function loadRecipesFromGitHub() {
+    if (!githubConfig.token) {
+        console.error('Token de GitHub no configurado');
+        return null;
+    }
+    
+    try {
+        const url = `https://api.github.com/repos/${githubConfig.username}/${githubConfig.repo}/contents/${githubConfig.file}`;
+        
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `token ${githubConfig.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            const content = decodeURIComponent(escape(atob(data.content)));
+            return JSON.parse(content);
+        } else {
+            console.error('Error al cargar desde GitHub:', await response.text());
+            return null;
+        }
+    } catch (error) {
+        console.error('Error al cargar desde GitHub:', error);
+        return null;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a los elementos del DOM
     const doseSlider = document.getElementById('dose-slider');
@@ -56,18 +238,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lista de recetas
     const recipesList = document.getElementById('recipes-list');
     
-    // Elementos de GitHub
-    const githubStatus = document.getElementById('github-status');
-    const githubStatusText = document.getElementById('github-status-text');
-    const configureGithubBtn = document.getElementById('configure-github');
-    const githubModal = document.getElementById('github-modal');
-    const closeModal = document.querySelector('.close');
-    const saveGithubConfigBtn = document.getElementById('save-github-config');
-    const githubTokenInput = document.getElementById('github-token');
-    const githubUsernameInput = document.getElementById('github-username');
-    const githubRepoInput = document.getElementById('github-repo');
-    const githubFileInput = document.getElementById('github-file');
-    
     // Tipos de molienda según clicks
     const grindTypes = {
         0: 'Muy Fina',
@@ -81,31 +251,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date();
     roastDate.value = today.toISOString().split('T')[0];
     
-    // Cargar configuración de GitHub desde localStorage
-    function loadGithubConfig() {
-        const savedConfig = localStorage.getItem('githubConfig');
-        if (savedConfig) {
-            githubConfig = JSON.parse(savedConfig);
-            updateGithubStatus();
-        }
-    }
+    // Inicializar event listeners para GitHub
+    initGitHubListeners();
     
-    // Guardar configuración de GitHub en localStorage
-    function saveGithubConfig() {
-        localStorage.setItem('githubConfig', JSON.stringify(githubConfig));
-        updateGithubStatus();
-    }
-    
-    // Actualizar la interfaz con el estado de GitHub
-    function updateGithubStatus() {
-        if (githubConfig.token) {
-            githubStatusText.textContent = `Conectado a GitHub: ${githubConfig.username}/${githubConfig.repo}`;
-            githubStatus.classList.add('connected');
-        } else {
-            githubStatusText.textContent = 'No conectado a GitHub';
-            githubStatus.classList.remove('connected');
-        }
-    }
+    // Cargar configuración de GitHub
+    loadGithubConfig();
     
     // Función para calcular y actualizar la interfaz
     function calculateEspresso() {
@@ -167,96 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 content.classList.remove('active');
             }
         });
-    }
-    
-    // Guardar recetas en GitHub
-    async function saveRecipesToGitHub(recipes) {
-        if (!githubConfig.token) {
-            console.error('Token de GitHub no configurado');
-            return false;
-        }
-        
-        try {
-            const url = `https://api.github.com/repos/${githubConfig.username}/${githubConfig.repo}/contents/${githubConfig.file}`;
-            
-            // Primero, intentamos obtener el archivo existente para obtener su SHA
-            let sha = null;
-            try {
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `token ${githubConfig.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    sha = data.sha;
-                }
-            } catch (e) {
-                console.log('Archivo no existe o no se puede acceder, se creará uno nuevo');
-            }
-            
-            // Preparar el contenido para GitHub
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(recipes, null, 2))));
-            const message = `Actualización de recetas desde La-té Lab: ${new Date().toLocaleString()}`;
-            
-            const putResponse = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${githubConfig.token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: message,
-                    content: content,
-                    sha: sha
-                })
-            });
-            
-            if (putResponse.ok) {
-                console.log('Recetas guardadas en GitHub correctamente');
-                return true;
-            } else {
-                console.error('Error al guardar en GitHub:', await putResponse.text());
-                return false;
-            }
-        } catch (error) {
-            console.error('Error al guardar en GitHub:', error);
-            return false;
-        }
-    }
-    
-    // Cargar recetas desde GitHub
-    async function loadRecipesFromGitHub() {
-        if (!githubConfig.token) {
-            console.error('Token de GitHub no configurado');
-            return null;
-        }
-        
-        try {
-            const url = `https://api.github.com/repos/${githubConfig.username}/${githubConfig.repo}/contents/${githubConfig.file}`;
-            
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `token ${githubConfig.token}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                const content = decodeURIComponent(escape(atob(data.content)));
-                return JSON.parse(content);
-            } else {
-                console.error('Error al cargar desde GitHub:', await response.text());
-                return null;
-            }
-        } catch (error) {
-            console.error('Error al cargar desde GitHub:', error);
-            return null;
-        }
     }
     
     // Función para guardar la receta completa
@@ -570,41 +630,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Event listeners para la funcionalidad de GitHub
-    configureGithubBtn.addEventListener('click', function() {
-        githubTokenInput.value = githubConfig.token || '';
-        githubUsernameInput.value = githubConfig.username;
-        githubRepoInput.value = githubConfig.repo;
-        githubFileInput.value = githubConfig.file;
-        githubModal.style.display = 'block';
-    });
-    
-    closeModal.addEventListener('click', function() {
-        githubModal.style.display = 'none';
-    });
-    
-    saveGithubConfigBtn.addEventListener('click', function() {
-        githubConfig.token = githubTokenInput.value;
-        githubConfig.username = githubUsernameInput.value;
-        githubConfig.repo = githubRepoInput.value;
-        githubConfig.file = githubFileInput.value;
-        
-        saveGithubConfig();
-        githubModal.style.display = 'none';
-        
-        // Recargar las recetas desde GitHub después de configurar
-        loadRecipes();
-    });
-    
-    // Cerrar modal al hacer clic fuera de él
-    window.addEventListener('click', function(event) {
-        if (event.target === githubModal) {
-            githubModal.style.display = 'none';
-        }
-    });
-    
     // Inicializar
-    loadGithubConfig();
     calculateEspresso();
     loadRecipes();
 });
