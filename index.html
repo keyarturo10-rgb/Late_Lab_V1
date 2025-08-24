@@ -77,19 +77,231 @@
         </div>
         
         <div class="tab-content active" id="calculator">
-            <!-- Contenido de la calculadora (sin cambios) -->
+            <div class="calculator">
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Dosis</div>
+                        <div class="param-value" id="dose-value">16.0 g</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="10" max="20" value="16" step="0.5" class="slider" id="dose-slider">
+                    </div>
+                    <div class="slider-labels">
+                        <span class="slider-label">10g</span>
+                        <span class="slider-label">15g</span>
+                        <span class="slider-label">20g</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Ratio</div>
+                        <div class="param-value" id="ratio-value">1:2.0</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="15" max="35" value="20" step="1" class="slider" id="ratio-slider">
+                    </div>
+                    <div class="ratio-labels">
+                        <span class="ratio-label">Ristretto<br>1:1.5</span>
+                        <span class="ratio-label">Espresso<br>1:2.0</span>
+                        <span class="ratio-label">Lungo<br>1:3.5</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Molienda</div>
+                        <div class="param-value" id="grind-value">15 clicks (Media)</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="30" value="15" step="1" class="slider" id="grind-slider">
+                    </div>
+                    <div class="grind-labels">
+                        <span class="grind-label">0<br>Muy Fina</span>
+                        <span class="grind-label">8<br>Fina</span>
+                        <span class="grind-label">15<br>Media</span>
+                        <span class="grind-label">22<br>Gruesa</span>
+                        <span class="grind-label">30<br>Muy Gruesa</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Temperatura</div>
+                        <div class="param-value" id="temp-value">92°C</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="80" max="100" value="92" step="1" class="slider" id="temp-slider">
+                    </div>
+                    <div class="slider-labels">
+                        <span class="slider-label">80°C</span>
+                        <span class="slider-label">90°C</span>
+                        <span class="slider-label">100°C</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Tiempo de extracción</div>
+                        <div class="param-value" id="time-value">30 seg</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="15" max="45" value="30" step="1" class="slider" id="time-slider">
+                    </div>
+                    <div class="slider-labels">
+                        <span class="slider-label">15s</span>
+                        <span class="slider-label">30s</span>
+                        <span class="slider-label">45s</span>
+                    </div>
+                </div>
+                
+                <div class="result-section">
+                    <div class="result-title">Peso en taza</div>
+                    <div class="result-value" id="yield-value">32.0</div>
+                    <div class="result-unit">gramos</div>
+                    <div class="espresso-type" id="espresso-type">Espresso</div>
+                </div>
+            </div>
         </div>
         
         <div class="tab-content" id="coffee-data">
-            <!-- Contenido de datos de café (sin cambios) -->
+            <div class="coffee-specialty">
+                <h2 class="section-title">Datos del Café de Especialidad</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre del Café</label>
+                    <input type="text" class="form-input" id="coffee-name" placeholder="Ej: Ethiopia Yirgacheffe">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Variedad</label>
+                    <input type="text" class="form-input" id="coffee-variety" placeholder="Ej: Bourbon, Geisha, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Origen</label>
+                    <input type="text" class="form-input" id="coffee-origin" placeholder="Ej: Ethiopia, Colombia, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Altura de siembra (msnm)</label>
+                    <input type="number" class="form-input" id="coffee-altitude" placeholder="Ej: 1800">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Procesamiento</label>
+                    <select class="form-select" id="coffee-process">
+                        <option value="">Seleccionar...</option>
+                        <option value="lavado">Lavado</option>
+                        <option value="natural">Natural</option>
+                        <option value="honey">Honey</option>
+                        <option value="anaerobico">Anaeróbico</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha de tostado</label>
+                    <input type="date" class="form-input" id="roast-date">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de tostado</label>
+                    <select class="form-select" id="roast-type">
+                        <option value="">Seleccionar...</option>
+                        <option value="claro">Claro</option>
+                        <option value="medio">Medio</option>
+                        <option value="medio-oscuro">Medio-Oscuro</option>
+                        <option value="oscuro">Oscuro</option>
+                    </select>
+                </div>
+                
+                <div class="image-upload">
+                    <label for="image-input" class="upload-btn">Cargar imagen de la etiqueta</label>
+                    <input type="file" id="image-input" accept="image/*">
+                    <div class="image-preview" id="image-preview">
+                        <img id="preview-img" src="" alt="Vista previa de la imagen">
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="tab-content" id="sensory">
-            <!-- Contenido de evaluación sensorial (sin cambios) -->
+            <div class="sensory-evaluation">
+                <h2 class="section-title">Evaluación Sensorial SCA</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas de sabor</label>
+                    <textarea class="form-textarea" id="flavor-notes" placeholder="Describe las notas de sabor (ej: frutos rojos, chocolate, cítricos...)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Dulzor (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="sweetness">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Acidez (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="acidity">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Cuerpo (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="body">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Balance (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="balance">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Puntuación general (1-100)</label>
+                    <input type="number" class="form-input" id="score" min="1" max="100" value="80">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Comentarios adicionales</label>
+                    <textarea class="form-textarea" id="additional-notes" placeholder="Otros comentarios sobre la extracción..."></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="save-recipe-btn">Guardar Receta Completa</button>
+                    <button class="btn btn-secondary" id="generate-pdf-btn">Generar PDF</button>
+                </div>
+            </div>
         </div>
         
         <div class="tab-content" id="recipes">
-            <!-- Contenido de recetas (sin cambios) -->
+            <div class="recipes-db">
+                <h2 class="section-title">Mis Recetas Guardadas</h2>
+                
+                <div id="recipes-list">
+                    <div class="no-recipes">
+                        <p>No hay recetas guardadas todavía.</p>
+                        <p>Usa la calculadora y guarda tu primera receta.</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="footer">
