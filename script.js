@@ -191,6 +191,75 @@ async function loadRecipesFromGitHub() {
     }
 }
 
+// Función para mostrar el modal de confirmación
+function showConfirmModal() {
+    const confirmModal = document.getElementById('confirm-modal');
+    if (confirmModal) {
+        confirmModal.style.display = 'block';
+    }
+}
+
+// Función para ocultar el modal de confirmación
+function hideConfirmModal() {
+    const confirmModal = document.getElementById('confirm-modal');
+    if (confirmModal) {
+        confirmModal.style.display = 'none';
+    }
+}
+
+// Función para eliminar todas las recetas
+async function deleteAllRecipes() {
+    // Eliminar del localStorage
+    localStorage.removeItem('flairRecipes');
+    
+    // También eliminar del archivo en GitHub si está configurado
+    if (githubConfig.token) {
+        try {
+            const url = `https://api.github.com/repos/${githubConfig.username}/${githubConfig.repo}/contents/${githubConfig.file}`;
+            
+            // Primero obtener el SHA del archivo existente
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${githubConfig.token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                const sha = data.sha;
+                
+                // Eliminar el archivo
+                const deleteResponse = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `token ${githubConfig.token}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Eliminación de todas las recetas desde La-té Lab',
+                        sha: sha
+                    })
+                });
+                
+                if (deleteResponse.ok) {
+                    console.log('Todas las recetas eliminadas de GitHub');
+                } else {
+                    console.error('Error al eliminar recetas de GitHub:', await deleteResponse.text());
+                }
+            }
+        } catch (error) {
+            console.error('Error al eliminar recetas de GitHub:', error);
+        }
+    }
+    
+    // Recargar la lista de recetas
+    loadRecipes();
+    hideConfirmModal();
+    alert('Todas las recetas han sido eliminadas');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Referencias a los elementos del DOM
     const doseSlider = document.getElementById('dose-slider');
@@ -238,6 +307,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lista de recetas
     const recipesList = document.getElementById('recipes-list');
     
+    // Botones para eliminar todas las recetas
+    const deleteAllBtn = document.getElementById('delete-all-recipes');
+    const confirmDeleteBtn = document.getElementById('confirm-delete');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    
     // Tipos de molienda según clicks
     const grindTypes = {
         0: 'Muy Fina',
@@ -256,6 +330,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Cargar configuración de GitHub
     loadGithubConfig();
+    
+    // Event listeners para eliminar todas las recetas
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', showConfirmModal);
+    }
+    
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', deleteAllRecipes);
+    }
+    
+    if (cancelDeleteBtn) {
+        cancelDeleteBtn.addEventListener('click', hideConfirmModal);
+    }
+    
+    // Cerrar modal al hacer clic fuera de él
+    window.addEventListener('click', function(event) {
+        const confirmModal = document.getElementById('confirm-modal');
+        if (confirmModal && event.target === confirmModal) {
+            hideConfirmModal();
+        }
+    });
     
     // Función para calcular y actualizar la interfaz
     function calculateEspresso() {
@@ -398,6 +493,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
+        // Mostrar u ocultar el botón de eliminar todas las recetas
+        const dangerZone = document.querySelector('.danger-zone');
+        
         if (savedRecipes.length === 0) {
             recipesList.innerHTML = `
                 <div class="no-recipes">
@@ -405,7 +503,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>Usa la calculadora y guarda tu primera receta.</p>
                 </div>
             `;
+            
+            // Ocultar el botón de eliminar todas las recetas si no hay recetas
+            if (dangerZone) {
+                dangerZone.style.display = 'none';
+            }
             return;
+        }
+        
+        // Mostrar el botón de eliminar todas las recetas si hay recetas
+        if (dangerZone) {
+            dangerZone.style.display = 'block';
         }
         
         recipesList.innerHTML = '';
