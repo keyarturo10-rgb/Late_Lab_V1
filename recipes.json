@@ -25,32 +25,5 @@
     "additionalNotes": "",
     "timestamp": "2025-08-24T23:10:55.610Z",
     "date": "24/8/2025"
-  },
-  {
-    "id": 1756077070109,
-    "dose": 16,
-    "ratio": 2,
-    "grind": 15,
-    "temp": 92,
-    "time": 30,
-    "yield": 32,
-    "espressoType": "Espresso",
-    "coffeeName": "Especial Aragua",
-    "coffeeVariety": "Typica",
-    "coffeeOrigin": "Colonia Tovar - Aragua (Venezuela)",
-    "coffeeAltitude": "1800",
-    "coffeeProcess": "lavado",
-    "roastDate": "2025-08-24",
-    "roastType": "medio",
-    "image": "https://keyarturo10-rgb.github.io/Late_Lab_V1/",
-    "flavorNotes": "",
-    "sweetness": 5,
-    "acidity": 5,
-    "body": 5,
-    "balance": 5,
-    "score": 80,
-    "additionalNotes": "",
-    "timestamp": "2025-08-24T23:11:10.109Z",
-    "date": "24/8/2025"
   }
 ]
