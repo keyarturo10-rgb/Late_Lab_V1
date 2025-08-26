@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La-té Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7D0A0A;
+            --primary-light: #9D2C2C;
+            --primary-very-light: #F9E6E6;
+            --text: #333333;
+            --text-light: #666666;
+            --background: #FFFFFF;
+            --card: #F8F8F8;
+            --border: #E0E0E0;
+            --success: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-icon {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-minimal {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-circle {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: absolute;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        .logo-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-lines .line {
+            position: absolute;
+            background-color: var(--primary);
+            transform-origin: center;
+        }
+
+        .logo-lines .horizontal {
+            width: 40px;
+            height: 1px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .logo-lines .vertical {
+            width: 1px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .logo-lines .diagonal-1 {
+            width: 1px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .logo-lines .diagonal-2 {
+            width: 1px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        .logo-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-dots .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+
+        .logo-dots .dot-1 {
+            top: 20px;
+            left: 20px;
+        }
+
+        .logo-dots .dot-2 {
+            top: 20px;
+            right: 20px;
+        }
+
+        .logo-dots .dot-3 {
+            bottom: 20px;
+            left: 38px;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .calculator, .coffee-specialty, .sensory-evaluation, .recipes-db {
+            background-color: var(--card);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .param-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .param-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .param-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .param-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .slider-container {
+            position: relative;
+            margin: 10px 0 5px;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(125, 10, 10, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(125, 10, 10, 0.3);
+            border: none;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .slider-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .ratio-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .ratio-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            width: 33%;
+            position: relative;
+        }
+
+        .ratio-label::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 6px;
+            background-color: var(--border);
+        }
+
+        .grind-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .grind-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            width: 20%;
+            position: relative;
+        }
+
+        .grind-label::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 6px;
+            background-color: var(--border);
+        }
+
+        .result-section {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(125, 10, 10, 0.2);
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 42px;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+
+        .result-unit {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .espresso-type {
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 10px;
+            padding: 6px 12px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .image-upload {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        #image-input {
+            display: none;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            margin: 15px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--text-light);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text);
+        }
+
+        .sensory-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sensory-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sensory-item label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .recipe-item {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+
+        .recipe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .recipe-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .recipe-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .recipe-details {
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .recipe-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .recipe-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .view-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .pdf-btn {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .no-recipes {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Estilos para la funcionalidad de Dropbox */
+        .dropbox-status {
+            background-color: var(--primary-very-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropbox-status.connected {
+            background-color: #e6f7ee;
+            border-color: var(--success);
+        }
+
+        .dropbox-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dropbox-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .dropbox-help {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .dropbox-help h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .dropbox-help ol {
+            padding-left: 20px;
+        }
+
+        .dropbox-help li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        /* Zona de peligro - Eliminar recetas */
+        .danger-zone {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #ffcccc;
+            border-radius: 10px;
+            background-color: #fff5f5;
+            display: none;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .danger-warning {
+            font-size: 12px;
+            color: #dc3545;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* Modal de confirmación */
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .confirm-content {
+            background-color: var(--background);
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .confirm-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .confirm-yes {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .confirm-no {
+            background-color: var(--text-light);
+            color: white;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .calculator, .coffee-specialty, .sensory-evaluation, .recipes-db {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .param-title, .param-value {
+                font-size: 16px;
+            }
+            
+            .result-value {
+                font-size: 36px;
+            }
+            
+            .ratio-label, .grind-label {
+                font-size: 10px;
+            }
+            
+            .sensory-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .logo-minimal {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo-circle {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .tab {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+            
+            .tab-icon {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .dropbox-status {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .confirm-content {
+                margin: 20% auto;
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .confirm-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-minimal">
+                    <div class="logo-circle"></div>
+                    <div class="logo-lines">
+                        <div class="line horizontal"></div>
+                        <div class="line vertical"></div>
+                        <div class="line diagonal-1"></div>
+                        <div class="line diagonal-2"></div>
+                    </div>
+                    <div class="logo-dots">
+                        <div class="dot dot-1"></div>
+                        <div class="dot dot-2"></div>
+                        <div class="dot dot-3"></div>
+                    </div>
+                </div>
+            </div>
+            <h1>La-té Lab</h1>
+            <p class="subtitle">Laboratorio de café espresso</p>
+        </div>
+        
+        <!-- Estado de Dropbox -->
+        <div id="dropbox-status" class="dropbox-status">
+            <span id="dropbox-status-text">No conectado a Dropbox</span>
+            <button id="configure-dropbox" class="dropbox-btn">Configurar Dropbox</button>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="calculator">
+                <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 12h20M4 6h16M4 18h16"></path>
+                    <path d="M8 6V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v3"></path>
+                    <path d="M8 18v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3"></path>
+                </svg>
+                Calculadora
+            </div>
+            <div class="tab" data-tab="coffee-data">
+                <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
+                    <path d="M3 8h14v8H3z"></path>
+                    <path d="M10 8v8"></path>
+                    <path d="M6 8v8"></path>
+                </svg>
+                Datos Café
+            </div>
+            <div class="tab" data-tab="sensory">
+                <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 4a8 8 0 0 1 7.89 6.7 1.53 1.53 0 0 0 1.49 1.3A1.5 1.5 0 0 1 23 13.5c0 1.93-2.57 3.5-5.5 3.5H4"></path>
+                    <path d="M12 4a8 8 0 0 0-7.89 6.7A1.53 1.53 0 0 1 2.62 12 1.5 1.5 0 0 0 1 13.5C1 15.43 3.57 17 6.5 17H20"></path>
+                    <path d="M7 13h10"></path>
+                    <path d="M7 9h10"></path>
+                </svg>
+                Evaluación
+            </div>
+            <div class="tab" data-tab="recipes">
+                <svg class="tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    <path d="M8 7h6"></path>
+                    <path d="M8 11h8"></path>
+                    <path d="M8 15h4"></path>
+                </svg>
+                Recetas
+            </div>
+        </div>
+        
+        <div class="tab-content active" id="calculator">
+            <div class="calculator">
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Dosis</div>
+                        <div class="param-value" id="dose-value">16.0 g</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="10" max="20" value="16" step="0.5" class="slider" id="dose-slider">
+                    </div>
+                    <div class="slider-labels">
+                        <span class="slider-label">10g</span>
+                        <span class="slider-label">15g</span>
+                        <span class="slider-label">20g</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Ratio</div>
+                        <div class="param-value" id="ratio-value">1:2.0</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="15" max="35" value="20" step="1" class="slider" id="ratio-slider">
+                    </div>
+                    <div class="ratio-labels">
+                        <span class="ratio-label">Ristretto<br>1:1.5</span>
+                        <span class="ratio-label">Espresso<br>1:2.0</span>
+                        <span class="ratio-label">Lungo<br>1:3.5</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Molienda</div>
+                        <div class="param-value" id="grind-value">15 clicks (Media)</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="30" value="15" step="1" class="slider" id="grind-slider">
+                    </div>
+                    <div class="grind-labels">
+                        <span class="grind-label">0<br>Muy Fina</span>
+                        <span class="grind-label">8<br>Fina</span>
+                        <span class="grind-label">15<br>Media</span>
+                        <span class="grind-label">22<br>Gruesa</span>
+                        <span class="grind-label">30<br>Muy Gruesa</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Temperatura</div>
+                        <div class="param-value" id="temp-value">92°C</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="80" max="100" value="92" step="1" class="slider" id="temp-slider">
+                    </div>
+                    <div class="slider-labels">
+                        <span class="slider-label">80°C</span>
+                        <span class="slider-label">90°C</span>
+                        <span class="slider-label">100°C</span>
+                    </div>
+                </div>
+                
+                <div class="param-section">
+                    <div class="param-header">
+                        <div class="param-title">Tiempo de extracción</div>
+                        <div class="param-value" id="time-value">30 seg</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" min="15" max="45" value="30" step="1" class="slider" id="time-slider">
+                    </div>
+                    <div class="slider-labels">
+                        <span class="slider-label">15s</span>
+                        <span class="slider-label">30s</span>
+                        <span class="slider-label">45s</span>
+                    </div>
+                </div>
+                
+                <div class="result-section">
+                    <div class="result-title">Peso en taza</div>
+                    <div class="result-value" id="yield-value">32.0</div>
+                    <div class="result-unit">gramos</div>
+                    <div class="espresso-type" id="espresso-type">Espresso</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="coffee-data">
+            <div class="coffee-specialty">
+                <h2 class="section-title">Datos del Café de Especialidad</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre del Café</label>
+                    <input type="text" class="form-input" id="coffee-name" placeholder="Ej: Ethiopia Yirgacheffe">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Variedad</label>
+                    <input type="text" class="form-input" id="coffee-variety" placeholder="Ej: Bourbon, Geisha, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Origen</label>
+                    <input type="text" class="form-input" id="coffee-origin" placeholder="Ej: Ethiopia, Colombia, etc.">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Altura de siembra (msnm)</label>
+                    <input type="number" class="form-input" id="coffee-altitude" placeholder="Ej: 1800">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Procesamiento</label>
+                    <select class="form-select" id="coffee-process">
+                        <option value="">Seleccionar...</option>
+                        <option value="lavado">Lavado</option>
+                        <option value="natural">Natural</option>
+                        <option value="honey">Honey</option>
+                        <option value="anaerobico">Anaeróbico</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha de tostado</label>
+                    <input type="date" class="form-input" id="roast-date">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de tostado</label>
+                    <select class="form-select" id="roast-type">
+                        <option value="">Seleccionar...</option>
+                        <option value="claro">Claro</option>
+                        <option value="medio">Medio</option>
+                        <option value="medio-oscuro">Medio-Oscuro</option>
+                        <option value="oscuro">Oscuro</option>
+                    </select>
+                </div>
+                
+                <div class="image-upload">
+                    <label for="image-input" class="upload-btn">Cargar imagen de la etiqueta</label>
+                    <input type="file" id="image-input" accept="image/*">
+                    <div class="image-preview" id="image-preview">
+                        <img id="preview-img" src="" alt="Vista previa de la imagen">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="sensory">
+            <div class="sensory-evaluation">
+                <h2 class="section-title">Evaluación Sensorial SCA</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas de sabor</label>
+                    <textarea class="form-textarea" id="flavor-notes" placeholder="Describe las notas de sabor (ej: frutos rojos, chocolate, cítricos...)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Dulzor (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="sweetness">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Acidez (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="acidity">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Cuerpo (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="body">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Balance (1-10)</label>
+                    <input type="range" min="1" max="10" value="5" class="slider" id="balance">
+                    <div class="slider-labels">
+                        <span class="slider-label">1</span>
+                        <span class="slider-label">5</span>
+                        <span class="slider-label">10</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Puntuación general (1-100)</label>
+                    <input type="number" class="form-input" id="score" min="1" max="100" value="80">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Comentarios adicionales</label>
+                    <textarea class="form-textarea" id="additional-notes" placeholder="Otros comentarios sobre la extracción..."></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="save-recipe-btn">Guardar Receta Completa</button>
+                    <button class="btn btn-secondary" id="generate-pdf-btn">Generar PDF</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="recipes">
+            <div class="recipes-db">
+                <h2 class="section-title">Mis Recetas Guardadas</h2>
+                
+                <!-- Botón para eliminar todas las recetas -->
+                <div class="danger-zone">
+                    <button id="delete-all-recipes" class="btn btn-danger">Eliminar Todas las Recetas</button>
+                    <p class="danger-warning">⚠️ Esta acción no se puede deshacer</p>
+                </div>
+                
+                <div id="recipes-list">
+                    <div class="no-recipes">
+                        <p>No hay recetas guardadas todavía.</p>
+                        <p>Usa la calculadora y guarda tu primera receta.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Diseñado específicamente para Flair Classic • 2025
+        </div>
+    </div>
+
+    <!-- Modal para configuración de Dropbox -->
+    <div id="dropbox-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Configuración de Dropbox</h2>
+            <p>Para guardar tus recetas en Dropbox, necesitas configurar tu aplicación.</p>
+            
+            <div class="form-group">
+                <label class="form-label">App Key</label>
+                <input type="text" class="form-input" id="dropbox-app-key" placeholder="Tu App Key de Dropbox">
+            </div>
+            
+            <button id="auth-dropbox" class="btn btn-primary">Autenticar con Dropbox</button>
+            
+            <div class="dropbox-help">
+                <h3>¿Cómo obtener la App Key?</h3>
+                <ol>
+                    <li>Ve a <a href="https://www.dropbox.com/developers/apps" target="_blank">Dropbox Developers</a></li>
+                    <li>Crea una nueva aplicación con "Scoped access"</li>
+                    <li>Configura los permisos de archivo (files.metadata.read y files.content.write)</li>
+                    <li>Copia la App Key y pégala arriba</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar recetas -->
+    <div id="confirm-modal" class="confirm-modal">
+        <div class="confirm-content">
+            <h3>¿Estás seguro?</h3>
+            <p>Esta acción eliminará todas las recetas permanentemente.</p>
+            <p>No podrás recuperarlas.</p>
+            <div class="confirm-buttons">
+                <button id="confirm-delete" class="confirm-btn confirm-yes">Sí, eliminar todo</button>
+                <button id="cancel-delete" class="confirm-btn confirm-no">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicialización de jsPDF
+        const { jsPDF } = window.jspdf;
+
+        // Variables globales para configuración de Dropbox
+        let dropboxConfig = {
+            appKey: null,
+            accessToken: null,
+            enabled: false
+        };
+
+        // Función para inicializar los event listeners de Dropbox
+        function initDropboxListeners() {
+            const configureDropboxBtn = document.getElementById('configure-dropbox');
+            const dropboxModal = document.getElementById('dropbox-modal');
+            const closeModal = document.querySelector('#dropbox-modal .close');
+            const authDropboxBtn = document.getElementById('auth-dropbox');
+            const dropboxAppKeyInput = document.getElementById('dropbox-app-key');
+            
+            if (configureDropboxBtn && dropboxModal) {
+                configureDropboxBtn.addEventListener('click', function() {
+                    if (dropboxAppKeyInput) {
+                        dropboxAppKeyInput.value = dropboxConfig.appKey || '';
+                        dropboxModal.style.display = 'block';
+                    }
+                });
+            }
+            
+            if (closeModal && dropboxModal) {
+                closeModal.addEventListener('click', function() {
+                    dropboxModal.style.display = 'none';
+                });
+            }
+            
+            if (authDropboxBtn) {
+                authDropboxBtn.addEventListener('click', function() {
+                    if (dropboxAppKeyInput) {
+                        dropboxConfig.appKey = dropboxAppKeyInput.value;
+                        saveDropboxConfig();
+                        authenticateDropbox();
+                    }
+                });
+            }
+            
+            // Cerrar modal al hacer clic fuera de él
+            window.addEventListener('click', function(event) {
+                const dropboxModal = document.getElementById('dropbox-modal');
+                if (dropboxModal && event.target === dropboxModal) {
+                    dropboxModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Función para autenticar con Dropbox usando flujo implícito
+        function authenticateDropbox() {
+            if (!dropboxConfig.appKey) {
+                alert('Por favor, ingresa la App Key de Dropbox');
+                return;
+            }
+            
+            // Construir la URL de autorización
+            const authUrl = `https://www.dropbox.com/oauth2/authorize?client_id=${dropboxConfig.appKey}&response_type=token&redirect_uri=${encodeURIComponent(window.location.origin)}`;
+            
+            // Redirigir a la página de autorización
+            window.location.href = authUrl;
+        }
+
+        // Función para procesar el token de acceso de la URL después de la redirección
+        function processDropboxTokenFromRedirect() {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
+            
+            if (accessToken) {
+                dropboxConfig.accessToken = accessToken;
+                dropboxConfig.enabled = true;
+                saveDropboxConfig();
+                updateDropboxStatus();
+                
+                // Limpiar la URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // Cargar recetas desde Dropbox
+                loadRecipes();
+            }
+        }
+
+        // Cargar configuración de Dropbox desde localStorage
+        function loadDropboxConfig() {
+            const savedConfig = localStorage.getItem('dropboxConfig');
+            if (savedConfig) {
+                dropboxConfig = JSON.parse(savedConfig);
+                updateDropboxStatus();
+            }
+        }
+
+        // Guardar configuración de Dropbox en localStorage
+        function saveDropboxConfig() {
+            localStorage.setItem('dropboxConfig', JSON.stringify(dropboxConfig));
+            updateDropboxStatus();
+        }
+
+        // Actualizar la interfaz con el estado de Dropbox
+        function updateDropboxStatus() {
+            const dropboxStatusText = document.getElementById('dropbox-status-text');
+            const dropboxStatus = document.getElementById('dropbox-status');
+            
+            if (dropboxStatusText && dropboxStatus) {
+                if (dropboxConfig.enabled && dropboxConfig.accessToken) {
+                    dropboxStatusText.textContent = `Conectado a Dropbox`;
+                    dropboxStatus.classList.add('connected');
+                } else {
+                    dropboxStatusText.textContent = 'No conectado a Dropbox';
+                    dropboxStatus.classList.remove('connected');
+                }
+            }
+        }
+
+        // Función para subir un archivo a Dropbox
+        async function uploadToDropbox(filename, content) {
+            if (!dropboxConfig.accessToken) {
+                console.error('Token de Dropbox no disponible');
+                return false;
+            }
+            
+            try {
+                const response = await fetch('https://content.dropboxapi.com/2/files/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${dropboxConfig.accessToken}`,
+                        'Content-Type': 'application/octet-stream',
+                        'Dropbox-API-Arg': JSON.stringify({
+                            path: `/${filename}`,
+                            mode: 'overwrite'
+                        })
+                    },
+                    body: content
+                });
+                
+                if (response.ok) {
+                    console.log('Archivo subido a Dropbox correctamente');
+                    return true;
+                } else {
+                    console.error('Error al subir a Dropbox:', await response.text());
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error al subir a Dropbox:', error);
+                return false;
+            }
+        }
+
+        // Función para descargar un archivo de Dropbox
+        async function downloadFromDropbox(filename) {
+            if (!dropboxConfig.accessToken) {
+                console.error('Token de Dropbox no disponible');
+                return null;
+            }
+            
+            try {
+                const response = await fetch('https://content.dropboxapi.com/2/files/download', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${dropboxConfig.accessToken}`,
+                        'Dropbox-API-Arg': JSON.stringify({
+                            path: `/${filename}`
+                        })
+                    }
+                });
+                
+                if (response.ok) {
+                    const content = await response.text();
+                    return content;
+                } else {
+                    console.error('Error al descargar de Dropbox:', await response.text());
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error al descargar de Dropbox:', error);
+                return null;
+            }
+        }
+
+        // Función para guardar recetas en Dropbox
+        async function saveRecipesToRemote(recipes) {
+            if (!dropboxConfig.enabled) {
+                console.error('Dropbox no configurado');
+                return false;
+            }
+            
+            const jsonData = JSON.stringify(recipes);
+            const success = await uploadToDropbox('recipes.json', jsonData);
+            return success;
+        }
+
+        // Función para cargar recetas desde Dropbox
+        async function loadRecipesFromRemote() {
+            if (!dropboxConfig.enabled) {
+                console.error('Dropbox no configurado');
+                return null;
+            }
+            
+            const content = await downloadFromDropbox('recipes.json');
+            if (content) {
+                return JSON.parse(content);
+            } else {
+                return null;
+            }
+        }
+
+        // Función para eliminar todas las recetas de Dropbox
+        async function deleteAllRecipesFromRemote() {
+            if (!dropboxConfig.enabled) {
+                console.error('Dropbox no configurado');
+                return false;
+            }
+            
+            // Para eliminar el archivo, usamos la API de eliminación
+            try {
+                const response = await fetch('https://api.dropboxapi.com/2/files/delete_v2', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${dropboxConfig.accessToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        path: '/recipes.json'
+                    })
+                });
+                
+                if (response.ok) {
+                    console.log('Archivo eliminado de Dropbox');
+                    return true;
+                } else {
+                    console.error('Error al eliminar de Dropbox:', await response.text());
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error al eliminar de Dropbox:', error);
+                return false;
+            }
+        }
+
+        // Función para mostrar el modal de confirmación
+        function showConfirmModal() {
+            const confirmModal = document.getElementById('confirm-modal');
+            if (confirmModal) {
+                confirmModal.style.display = 'block';
+            }
+        }
+
+        // Función para ocultar el modal de confirmación
+        function hideConfirmModal() {
+            const confirmModal = document.getElementById('confirm-modal');
+            if (confirmModal) {
+                confirmModal.style.display = 'none';
+            }
+        }
+
+        // Función para eliminar todas las recetas
+        async function deleteAllRecipes() {
+            // Eliminar del localStorage
+            localStorage.removeItem('flairRecipes');
+            
+            // También eliminar de Dropbox si está configurado
+            if (dropboxConfig.enabled) {
+                const success = await deleteAllRecipesFromRemote();
+                if (!success) {
+                    alert('Recetas eliminadas localmente, pero error al eliminar de Dropbox');
+                }
+            }
+            
+            // Recargar la lista de recetas
+            loadRecipes();
+            hideConfirmModal();
+            alert('Todas las recetas han sido eliminadas');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a los elementos del DOM
+            const doseSlider = document.getElementById('dose-slider');
+            const doseValue = document.getElementById('dose-value');
+            const ratioSlider = document.getElementById('ratio-slider');
+            const ratioValue = document.getElementById('ratio-value');
+            const grindSlider = document.getElementById('grind-slider');
+            const grindValue = document.getElementById('grind-value');
+            const tempSlider = document.getElementById('temp-slider');
+            const tempValue = document.getElementById('temp-value');
+            const timeSlider = document.getElementById('time-slider');
+            const timeValue = document.getElementById('time-value');
+            const yieldValue = document.getElementById('yield-value');
+            const espressoType = document.getElementById('espresso-type');
+            
+            // Referencias a los elementos del formulario
+            const coffeeName = document.getElementById('coffee-name');
+            const coffeeVariety = document.getElementById('coffee-variety');
+            const coffeeOrigin = document.getElementById('coffee-origin');
+            const coffeeAltitude = document.getElementById('coffee-altitude');
+            const coffeeProcess = document.getElementById('coffee-process');
+            const roastDate = document.getElementById('roast-date');
+            const roastType = document.getElementById('roast-type');
+            const imageInput = document.getElementById('image-input');
+            const imagePreview = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            
+            // Referencias a la evaluación sensorial
+            const flavorNotes = document.getElementById('flavor-notes');
+            const sweetness = document.getElementById('sweetness');
+            const acidity = document.getElementById('acidity');
+            const body = document.getElementById('body');
+            const balance = document.getElementById('balance');
+            const score = document.getElementById('score');
+            const additionalNotes = document.getElementById('additional-notes');
+            
+            // Botones
+            const saveRecipeBtn = document.getElementById('save-recipe-btn');
+            const generatePdfBtn = document.getElementById('generate-pdf-btn');
+            
+            // Tabs
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // Lista de recetas
+            const recipesList = document.getElementById('recipes-list');
+            
+            // Botones para eliminar todas las recetas
+            const deleteAllBtn = document.getElementById('delete-all-recipes');
+            const confirmDeleteBtn = document.getElementById('confirm-delete');
+            const cancelDeleteBtn = document.getElementById('cancel-delete');
+            
+            // Tipos de molienda según clicks
+            const grindTypes = {
+                0: 'Muy Fina',
+                8: 'Fina', 
+                15: 'Media',
+                22: 'Gruesa',
+                30: 'Muy Gruesa'
+            };
+            
+            // Establecer fecha actual como valor por defecto
+            const today = new Date();
+            roastDate.value = today.toISOString().split('T')[0];
+            
+            // Inicializar event listeners para Dropbox
+            initDropboxListeners();
+            
+            // Cargar configuración de Dropbox
+            loadDropboxConfig();
+            
+            // Procesar token de Dropbox después de redirección
+            processDropboxTokenFromRedirect();
+            
+            // Event listeners para eliminar todas las recetas
+            if (deleteAllBtn) {
+                deleteAllBtn.addEventListener('click', showConfirmModal);
+            }
+            
+            if (confirmDeleteBtn) {
+                confirmDeleteBtn.addEventListener('click', deleteAllRecipes);
+            }
+            
+            if (cancelDeleteBtn) {
+                cancelDeleteBtn.addEventListener('click', hideConfirmModal);
+            }
+            
+            // Cerrar modal al hacer clic fuera de él
+            window.addEventListener('click', function(event) {
+                const confirmModal = document.getElementById('confirm-modal');
+                if (confirmModal && event.target === confirmModal) {
+                    hideConfirmModal();
+                }
+            });
+            
+            // Función para calcular y actualizar la interfaz
+            function calculateEspresso() {
+                // Obtener valores actuales
+                const dose = parseFloat(doseSlider.value);
+                const ratio = parseFloat(ratioSlider.value) / 10;
+                const grind = parseInt(grindSlider.value);
+                const temp = parseInt(tempSlider.value);
+                const time = parseInt(timeSlider.value);
+                
+                // Actualizar valores mostrados
+                doseValue.textContent = dose.toFixed(1) + ' g';
+                ratioValue.textContent = '1:' + ratio.toFixed(1);
+                
+                // Determinar el tipo de molienda más cercano
+                let closestGrindType = 'Media';
+                let closestDiff = Infinity;
+                
+                for (const key in grindTypes) {
+                    const diff = Math.abs(grind - parseInt(key));
+                    if (diff < closestDiff) {
+                        closestDiff = diff;
+                        closestGrindType = grindTypes[key];
+                    }
+                }
+                
+                grindValue.textContent = grind + ' clicks (' + closestGrindType + ')';
+                tempValue.textContent = temp + '°C';
+                timeValue.textContent = time + ' seg';
+                
+                // Calcular resultado
+                const yield = dose * ratio;
+                yieldValue.textContent = yield.toFixed(1);
+                
+                // Determinar tipo de espresso
+                if (ratio < 1.8) {
+                    espressoType.textContent = 'Ristretto';
+                } else if (ratio <= 2.2) {
+                    espressoType.textContent = 'Espresso';
+                } else {
+                    espressoType.textContent = 'Lungo';
+                }
+            }
+            
+            // Función para cambiar de pestaña
+            function changeTab(tabName) {
+                tabs.forEach(tab => {
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.add('active');
+                    } else {
+                        tab.classList.remove('active');
+                    }
+                });
+                
+                tabContents.forEach(content => {
+                    if (content.id === tabName) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Función para guardar la receta completa
+            async function saveRecipe() {
+                // Validar campos obligatorios
+                if (!coffeeName.value.trim()) {
+                    alert('Por favor, ingresa el nombre del café');
+                    changeTab('coffee-data');
+                    return;
+                }
+                
+                // Crear objeto con todos los datos
+                const recipeData = {
+                    id: Date.now(),
+                    // Datos de la calculadora
+                    dose: parseFloat(doseSlider.value),
+                    ratio: parseFloat(ratioSlider.value) / 10,
+                    grind: parseInt(grindSlider.value),
+                    temp: parseInt(tempSlider.value),
+                    time: parseInt(timeSlider.value),
+                    yield: parseFloat(doseSlider.value) * (parseFloat(ratioSlider.value) / 10),
+                    espressoType: espressoType.textContent,
+                    
+                    // Datos del café
+                    coffeeName: coffeeName.value,
+                    coffeeVariety: coffeeVariety.value,
+                    coffeeOrigin: coffeeOrigin.value,
+                    coffeeAltitude: coffeeAltitude.value,
+                    coffeeProcess: coffeeProcess.value,
+                    roastDate: roastDate.value,
+                    roastType: roastType.value,
+                    image: previewImg.src || '',
+                    
+                    // Evaluación sensorial
+                    flavorNotes: flavorNotes.value,
+                    sweetness: parseInt(sweetness.value),
+                    acidity: parseInt(acidity.value),
+                    body: parseInt(body.value),
+                    balance: parseInt(balance.value),
+                    score: parseInt(score.value),
+                    additionalNotes: additionalNotes.value,
+                    
+                    // Metadata
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toLocaleDateString('es-ES')
+                };
+                
+                // Guardar en localStorage
+                let savedRecipes = JSON.parse(localStorage.getItem('flairRecipes')) || [];
+                savedRecipes.push(recipeData);
+                localStorage.setItem('flairRecipes', JSON.stringify(savedRecipes));
+                
+                // Guardar también en Dropbox si está configurado
+                if (dropboxConfig.enabled) {
+                    const success = await saveRecipesToRemote(savedRecipes);
+                    if (success) {
+                        alert('Receta guardada correctamente en Dropbox');
+                    } else {
+                        alert('Receta guardada localmente, pero error al guardar en Dropbox');
+                    }
+                } else {
+                    alert('Receta guardada localmente');
+                }
+                
+                loadRecipes();
+                changeTab('recipes');
+            }
+            
+            // Función para cargar las recetas guardadas
+            async function loadRecipes() {
+                let savedRecipes = JSON.parse(localStorage.getItem('flairRecipes')) || [];
+                
+                // Intentar cargar desde Dropbox si está configurado
+                if (dropboxConfig.enabled) {
+                    const dropboxRecipes = await loadRecipesFromRemote();
+                    if (dropboxRecipes && dropboxRecipes.length > 0) {
+                        savedRecipes = dropboxRecipes;
+                        localStorage.setItem('flairRecipes', JSON.stringify(savedRecipes));
+                    }
+                }
+                
+                // Mostrar u ocultar el botón de eliminar todas las recetas
+                const dangerZone = document.querySelector('.danger-zone');
+                
+                if (savedRecipes.length === 0) {
+                    recipesList.innerHTML = `
+                        <div class="no-recipes">
+                            <p>No hay recetas guardadas todavía.</p>
+                            <p>Usa la calculadora y guarda tu primera receta.</p>
+                        </div>
+                    `;
+                    
+                    // Ocultar el botón de eliminar todas las recetas si no hay recetas
+                    if (dangerZone) {
+                        dangerZone.style.display = 'none';
+                    }
+                    return;
+                }
+                
+                // Mostrar el botón de eliminar todas las recetas si hay recetas
+                if (dangerZone) {
+                    dangerZone.style.display = 'block';
+                }
+                
+                recipesList.innerHTML = '';
+                
+                savedRecipes.sort((a, b) => b.id - a.id).forEach(recipe => {
+                    const recipeEl = document.createElement('div');
+                    recipeEl.className = 'recipe-item';
+                    recipeEl.innerHTML = `
+                        <div class="recipe-header">
+                            <div class="recipe-name">${recipe.coffeeName}</div>
+                            <div class="recipe-date">${recipe.date}</div>
+                        </div>
+                        <div class="recipe-details">
+                            <strong>Dosis:</strong> ${recipe.dose}g | <strong>Ratio:</strong> 1:${recipe.ratio.toFixed(1)}<br>
+                            <strong>Molienda:</strong> ${recipe.grind} clicks | <strong>Temperatura:</strong> ${recipe.temp}°C<br>
+                            <strong>Tiempo:</strong> ${recipe.time || 30} seg | <strong>Puntuación:</strong> ${recipe.score}/100
+                        </div>
+                        <div class="recipe-actions">
+                            <button class="recipe-btn view-btn" data-id="${recipe.id}">Ver</button>
+                            <button class="recipe-btn pdf-btn" data-id="${recipe.id}">PDF</button>
+                            <button class="recipe-btn delete-btn" data-id="${recipe.id}">Eliminar</button>
+                        </div>
+                    `;
+                    recipesList.appendChild(recipeEl);
+                });
+                
+                // Añadir event listeners a los botones
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const recipeId = parseInt(this.dataset.id);
+                        viewRecipe(recipeId);
+                    });
+                });
+                
+                document.querySelectorAll('.pdf-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const recipeId = parseInt(this.dataset.id);
+                        generateRecipePdf(recipeId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const recipeId = parseInt(this.dataset.id);
+                        deleteRecipe(recipeId);
+                    });
+                });
+            }
+            
+            // Función para ver una receta
+            function viewRecipe(recipeId) {
+                const savedRecipes = JSON.parse(localStorage.getItem('flairRecipes')) || [];
+                const recipe = savedRecipes.find(r => r.id === recipeId);
+                
+                if (!recipe) {
+                    alert('Receta no encontrada');
+                    return;
+                }
+                
+                // Llenar los formularios con los datos de la receta
+                doseSlider.value = recipe.dose;
+                ratioSlider.value = recipe.ratio * 10;
+                grindSlider.value = recipe.grind;
+                tempSlider.value = recipe.temp;
+                timeSlider.value = recipe.time || 30;
+                
+                coffeeName.value = recipe.coffeeName;
+                coffeeVariety.value = recipe.coffeeVariety || '';
+                coffeeOrigin.value = recipe.coffeeOrigin || '';
+                coffeeAltitude.value = recipe.coffeeAltitude || '';
+                coffeeProcess.value = recipe.coffeeProcess || '';
+                roastDate.value = recipe.roastDate || '';
+                roastType.value = recipe.roastType || '';
+                
+                if (recipe.image) {
+                    previewImg.src = recipe.image;
+                    imagePreview.style.display = 'block';
+                }
+                
+                flavorNotes.value = recipe.flavorNotes || '';
+                sweetness.value = recipe.sweetness || 5;
+                acidity.value = recipe.acidity || 5;
+                body.value = recipe.body || 5;
+                balance.value = recipe.balance || 5;
+                score.value = recipe.score || 80;
+                additionalNotes.value = recipe.additionalNotes || '';
+                
+                // Recalcular
+                calculateEspresso();
+                
+                // Cambiar a la pestaña de calculadora
+                changeTab('calculator');
+            }
+            
+            // Función para eliminar una receta
+            async function deleteRecipe(recipeId) {
+                if (!confirm('¿Estás seguro de que quieres eliminar esta receta?')) {
+                    return;
+                }
+                
+                let savedRecipes = JSON.parse(localStorage.getItem('flairRecipes')) || [];
+                savedRecipes = savedRecipes.filter(r => r.id !== recipeId);
+                localStorage.setItem('flairRecipes', JSON.stringify(savedRecipes));
+                
+                // Actualizar también en Dropbox si está configurado
+                if (dropboxConfig.enabled) {
+                    const success = await saveRecipesToRemote(savedRecipes);
+                    if (!success) {
+                        alert('Receta eliminada localmente, pero error al actualizar Dropbox');
+                    }
+                }
+                
+                loadRecipes();
+            }
+            
+            // Función para generar PDF de una receta
+            function generateRecipePdf(recipeId) {
+                const savedRecipes = JSON.parse(localStorage.getItem('flairRecipes')) || [];
+                const recipe = savedRecipes.find(r => r.id === recipeId);
+                
+                if (!recipe) {
+                    alert('Receta no encontrada');
+                    return;
+                }
+                
+                // Crear un nuevo documento PDF
+                const doc = new jsPDF();
+                
+                // Añadir contenido al PDF
+                doc.setFontSize(20);
+                doc.setTextColor(125, 10, 10);
+                doc.text('La-té Lab - Receta de Café', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(16);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Café: ${recipe.coffeeName}`, 20, 40);
+                
+                doc.setFontSize(12);
+                doc.text(`Variedad: ${recipe.coffeeVariety || 'N/A'}`, 20, 50);
+                doc.text(`Origen: ${recipe.coffeeOrigin || 'N/A'}`, 20, 60);
+                doc.text(`Altura: ${recipe.coffeeAltitude || 'N/A'} msnm`, 20, 70);
+                doc.text(`Procesamiento: ${recipe.coffeeProcess || 'N/A'}`, 20, 80);
+                doc.text(`Tostado: ${recipe.roastType || 'N/A'} (${recipe.roastDate || 'N/A'})`, 20, 90);
+                
+                // Parámetros de extracción
+                doc.setFontSize(14);
+                doc.text('Parámetros de Extracción', 20, 110);
+                
+                doc.setFontSize(12);
+                doc.text(`Dosis: ${recipe.dose}g`, 20, 120);
+                doc.text(`Ratio: 1:${recipe.ratio.toFixed(1)} (${recipe.espressoType})`, 20, 130);
+                doc.text(`Molienda: ${recipe.grind} clicks`, 20, 140);
+                doc.text(`Temperatura: ${recipe.temp}°C`, 20, 150);
+                doc.text(`Tiempo: ${recipe.time || 30} segundos`, 20, 160);
+                doc.text(`Peso en taza: ${recipe.yield.toFixed(1)}g`, 20, 170);
+                
+                // Evaluación sensorial
+                doc.setFontSize(14);
+                doc.text('Evaluación Sensorial', 20, 190);
+                
+                doc.setFontSize(12);
+                doc.text(`Notas de sabor: ${recipe.flavorNotes || 'N/A'}`, 20, 200);
+                doc.text(`Dulzor: ${recipe.sweetness}/10`, 20, 210);
+                doc.text(`Acidez: ${recipe.acidity}/10`, 20, 220);
+                doc.text(`Cuerpo: ${recipe.body}/10`, 20, 230);
+                doc.text(`Balance: ${recipe.balance}/10`, 20, 240);
+                doc.text(`Puntuación: ${recipe.score}/100`, 20, 250);
+                
+                if (recipe.additionalNotes) {
+                    doc.text(`Comentarios: ${recipe.additionalNotes}`, 20, 260);
+                }
+                
+                // Fecha
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')}`, 105, 280, { align: 'center' });
+                
+                // Guardar el PDF
+                doc.save(`Receta_${recipe.coffeeName}_${new Date().toLocaleDateString('es-ES').replace(/\//g, '-')}.pdf`);
+            }
+            
+            // Event listeners para los sliders
+            doseSlider.addEventListener('input', calculateEspresso);
+            ratioSlider.addEventListener('input', calculateEspresso);
+            grindSlider.addEventListener('input', calculateEspresso);
+            tempSlider.addEventListener('input', calculateEspresso);
+            timeSlider.addEventListener('input', calculateEspresso);
+            
+            // Event listener para la carga de imagen
+            imageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Event listener para guardar receta
+            saveRecipeBtn.addEventListener('click', saveRecipe);
+            
+            // Event listener para generar PDF
+            generatePdfBtn.addEventListener('click', function() {
+                // Primero guardar la receta actual
+                saveRecipe();
+                
+                // Luego generar PDF de la última receta guardada
+                const savedRecipes = JSON.parse(localStorage.getItem('flairRecipes')) || [];
+                if (savedRecipes.length > 0) {
+                    const lastRecipe = savedRecipes[savedRecipes.length - 1];
+                    generateRecipePdf(lastRecipe.id);
+                }
+            });
+            
+            // Event listeners para las pestañas
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    changeTab(this.dataset.tab);
+                });
+            });
+            
+            // Inicializar
+            calculateEspresso();
+            loadRecipes();
+        });
+    </script>
+</body>
+</html>
